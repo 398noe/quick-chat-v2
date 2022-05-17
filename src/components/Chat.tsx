@@ -56,7 +56,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
 
     useEffect(() => {
         /**
-         * 5秒後にDisableを解除
+         * 10秒後にDisableを解除
          */
         if (buttonDisable === true) {
             sleep(10000).then(r => {
