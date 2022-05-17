@@ -1,15 +1,10 @@
 import { Badge, Box, Stack, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
 interface props {
     id: string;
     name: string;
     message: string;
 }
 export const ChatMessage: React.FC<props> = (props) => {
-    // make console log for enthusiast
-    useEffect(() => {
-        console.log(props.id, ":", props.name, ":", props.message);
-    }, []);
 
     return (
         <Box>

@@ -3,7 +3,7 @@ import { FaPaperPlane, FaPlusSquare } from "react-icons/fa";
 import ChatMessage from "./ChatMessage";
 
 import Peer, { SfuRoom } from "skyway-js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 const APIKEY = process.env.REACT_APP_API_KEY;
 
@@ -30,11 +30,6 @@ export const Chat: React.FC<props> = ({ roomId }) => {
     const handleUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserName(event.target.value);
     }
-    /**
-     * コンポーネントが読み込まれた際に動作
-     */
-    useEffect(() => {
-    }, []);
 
     const onStart = () => {
         if (peer.current) {
@@ -57,7 +52,9 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                 console.log("データを受信しました");
                 console.log("data: ", data, "\nsrc:", src);
                 // データをチャットの配列に追加
-                setMessages([...messages, data]);
+                setMessages((prev) => {
+                    return [...prev, data]
+                });
             });
             initRoom.on("peerLeave", (peerId) => {
                 console.log(peerId, "さんが退出しました");
@@ -106,8 +103,10 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                                 name: userName,
                                 message: message
                             }
-                            setMessages([...messages, willSendMessage]);
                             sendMessage(willSendMessage);
+                            setMessages((prev) => {
+                                return [...prev, willSendMessage]
+                            });
                         }
                         }
                     />
@@ -120,7 +119,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                 {showMessage()}
             </Flex>
             <Box>
-                <IconButton variant="solid" aria-label={""} icon={<FaPlusSquare />}
+                <IconButton variant="solid" aria-label={"Start connection"} icon={<FaPlusSquare />}
                     onClick={onStart}
                 />
             </Box>
