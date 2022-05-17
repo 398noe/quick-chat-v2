@@ -32,6 +32,9 @@ const SocialButton = ({ children, label, href } : {
 export default function Footer() {
     return (
         <Box
+            pos={"fixed"}
+            bottom={0}
+            zIndex={100}
             w={"full"}
             bg={useColorModeValue('gray.50', 'gray.900')}
             color={useColorModeValue('gray.700', 'gray.200')}>
@@ -45,7 +48,7 @@ export default function Footer() {
                 align={{ base: 'center', md: 'center' }}>
                 <Text>Quick Text Chat Project © 2022<br />All rights reserved by @398noetan</Text>
                 <Stack direction={'row'} spacing={6}>
-                    <SocialButton label={'GitHub'} href={'https://github.com/398noe/quick-text-chat'}>
+                    <SocialButton label={'GitHub'} href={'https://github.com/398noe/quick-text-v2'}>
                         <FaGithub />
                     </SocialButton>
                     <SocialButton label={'Twitter'} href={'https://twitter.com/398noetan'}>
