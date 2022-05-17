@@ -1,6 +1,5 @@
 import { Flex, FormControl, Input, IconButton, VStack, Divider, Box } from "@chakra-ui/react";
-import { FaPaperPlane } from "react-icons/fa";
-import AlertMessage from "./AlertMessage";
+import { FaPaperPlane, FaPlusSquare } from "react-icons/fa";
 import ChatMessage from "./ChatMessage";
 
 import Peer, { SfuRoom } from "skyway-js";
@@ -18,13 +17,9 @@ interface Message {
 }
 
 export const Chat: React.FC<props> = ({ roomId }) => {
-    const peer = useRef(new Peer({ key: APIKEY as string }));
+    const peer = useRef(new Peer({ key: APIKEY as string, debug: 3 }));
     const [room, setRoom] = useState<SfuRoom>();
-    const [messages, setMessages] = useState<Array<Message>>([{
-        id: "noe",
-        name: "のえ",
-        message: "テストメッセージ"
-    }]);
+    const [messages, setMessages] = useState<Array<Message>>([]);
 
     const [message, setMessage] = useState("");
     const [userName, setUserName] = useState("匿名");
@@ -38,7 +33,8 @@ export const Chat: React.FC<props> = ({ roomId }) => {
     /**
      * コンポーネントが読み込まれた際に動作
      */
-    useEffect(() => { }, []);
+    useEffect(() => {
+    }, []);
 
     const onStart = () => {
         if (peer.current) {
@@ -61,6 +57,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                 console.log("データを受信しました");
                 console.log("data: ", data, "\nsrc:", src);
                 // データをチャットの配列に追加
+                setMessages([...messages, data]);
             });
             initRoom.on("peerLeave", (peerId) => {
                 console.log(peerId, "さんが退出しました");
@@ -88,8 +85,6 @@ export const Chat: React.FC<props> = ({ roomId }) => {
             )
         );
     }
-
-
 
     return (
         <Flex direction={"column"} maxH={"80vh"}>
@@ -131,6 +126,9 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                 {showMessage()}
             </Flex>
             <Box>
+                <IconButton variant="solid" aria-label={""} icon={<FaPlusSquare />}
+                    onClick={onStart}
+                />
             </Box>
         </Flex>
     );
