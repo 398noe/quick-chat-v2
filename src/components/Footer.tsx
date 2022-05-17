@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Box, chakra, Container, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
+import { Box, Button, Container, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
 import { FaGithub, FaTwitter } from "react-icons/fa";
 
 const SocialButton = ({ children, label, href } : {
@@ -8,7 +8,7 @@ const SocialButton = ({ children, label, href } : {
     href: string;
 }) => {
     return (
-        <chakra.button
+        <Button
             bg={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
             rounded={'full'}
             w={8}
@@ -25,7 +25,7 @@ const SocialButton = ({ children, label, href } : {
             }}>
             <VisuallyHidden>{label}</VisuallyHidden>
             {children}
-        </chakra.button>
+        </Button>
     );
 };
 

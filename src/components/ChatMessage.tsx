@@ -5,7 +5,6 @@ interface props {
     message: string;
 }
 export const ChatMessage: React.FC<props> = (props) => {
-
     return (
         <Box>
             <Stack direction="row" p={2} spacing={2}>
