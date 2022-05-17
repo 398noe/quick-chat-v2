@@ -1,4 +1,4 @@
-import { Flex, FormControl, Input, IconButton, VStack, Divider, Button, HStack } from "@chakra-ui/react";
+import { Flex, FormControl, Input, IconButton, VStack, Divider } from "@chakra-ui/react";
 import { FaPaperPlane } from "react-icons/fa";
 import ChatMessage from "./ChatMessage";
 
@@ -52,6 +52,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
             onStart();
             isFirst.current = true;
         }
+    // eslint-disable-next-line
     }, []);
 
     useEffect(() => {

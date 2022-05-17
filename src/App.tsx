@@ -1,8 +1,8 @@
 import './App.css';
 import Chat from './components/Chat';
 import Layout from './Layout/Layout';
-import { BrowserRouter, Route, useLocation } from "react-router-dom";
-import { Box, Button, Code, Text } from '@chakra-ui/react';
+import { useLocation } from "react-router-dom";
+import { Box, Code, Text } from '@chakra-ui/react';
 
 const APPURL = process.env.REACT_APP_URL;
 
