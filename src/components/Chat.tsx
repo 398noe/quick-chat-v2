@@ -26,6 +26,8 @@ export const Chat: React.FC<props> = ({ roomId }) => {
     const [message, setMessage] = useState("");
     const [userName, setUserName] = useState("");
 
+    const [buttonDisable, setButtonDisable] = useState(false);
+
     const {
         register,
         handleSubmit,
@@ -51,6 +53,21 @@ export const Chat: React.FC<props> = ({ roomId }) => {
             isFirst.current = true;
         }
     }, []);
+
+    useEffect(() => {
+        /**
+         * 5秒後にDisableを解除
+         */
+        if (buttonDisable === true) {
+            sleep(10000).then(r => {
+                setButtonDisable(false);
+            });
+        }
+    }, [buttonDisable]);
+
+    const sleep = (ms: number) => {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
 
     const onStart = () => {
         if (peer.current) {
@@ -139,6 +156,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                         aria-label="send message"
                         variant={"solid"}
                         icon={<FaPaperPlane />}
+                        isDisabled={buttonDisable}
                         onClick={handleSubmit((data) => {
                             const willSendMessage: Message = {
                                 id: peer.current.id,
@@ -146,6 +164,11 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                                 message: message
                             }
                             sendMessage(willSendMessage);
+
+                            // ボタンを10秒間disableに
+                            setButtonDisable((prev) => {
+                                return (!prev);
+                            })
                             setMessages((prev) => {
                                 return [...prev, willSendMessage]
                             });
