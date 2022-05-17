@@ -16,13 +16,11 @@ export const Header = () => {
                 borderColor={useColorModeValue("gray.200", "gray.800")}
             >
                 <Box px={2}>
-                    <a href="/"><Button as="a" variant="ghost"><Text fontSize={24} fontWeight={700}>Quick Chat</Text></Button></a>
+                    <Button as="a" href="/" variant="ghost"><Text fontSize={24} fontWeight={700}>Quick Chat</Text></Button>
                 </Box>
                 <Flex alignItems={'center'}>
                     <Stack direction={'row'} spacing={2}>
-                        <a href="https://github.com/398noe/quick-chat-v2">
-                            <Button variant="ghost" as="a"><FaGithub /></Button>
-                        </a>
+                        <Button variant="ghost" as="a" href="https://github.com/398noe/quick-chat-v2"><FaGithub /></Button>
                         <Button onClick={toggleColorMode} variant="ghost">
                             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
                         </Button>

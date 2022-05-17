@@ -5,7 +5,7 @@ import Layout from './Layout/Layout';
 function App() {
     return (
         <Layout>
-            <Chat />
+            <Chat roomId={"test"}/>
         </Layout>
     );
 }
