@@ -5,6 +5,9 @@ import ChatMessage from "./ChatMessage";
 import Peer, { SfuRoom } from "skyway-js";
 import React, { useEffect, useRef, useState } from "react";
 
+import { useForm } from "react-hook-form";
+import AlertMessage from "./AlertMessage";
+
 const APIKEY = process.env.REACT_APP_API_KEY;
 interface props {
     roomId: string;
@@ -21,7 +24,18 @@ export const Chat: React.FC<props> = ({ roomId }) => {
     const [messages, setMessages] = useState<Array<Message>>([]);
 
     const [message, setMessage] = useState("");
-    const [userName, setUserName] = useState("匿名");
+    const [userName, setUserName] = useState("");
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({
+        defaultValues: {
+            username: "",
+            message: ""
+        }
+    });
 
     const handleMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessage(event.target.value);
@@ -32,7 +46,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
     const isFirst = useRef(false);
 
     useEffect(() => {
-        if(isFirst.current === false) {
+        if (isFirst.current === false) {
             onStart();
             isFirst.current = true;
         }
@@ -108,11 +122,13 @@ export const Chat: React.FC<props> = ({ roomId }) => {
             <FormControl flexGrow={0}>
                 <Flex gap={2}>
                     <Input
+                        {...register("username", { required: true, maxLength: 20 })}
                         id="name" type="text" placeholder={"匿名"} w={16}
                         value={userName}
                         onChange={handleUserName}
                     />
                     <Input
+                        {...register("message", { required: true, maxLength: 100 })}
                         flex={1}
                         id="message" type="text" placeholder={"送るメッセージ"}
                         value={message}
@@ -123,7 +139,7 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                         aria-label="send message"
                         variant={"solid"}
                         icon={<FaPaperPlane />}
-                        onClick={() => {
+                        onClick={handleSubmit((data) => {
                             const willSendMessage: Message = {
                                 id: peer.current.id,
                                 name: userName,
@@ -133,12 +149,22 @@ export const Chat: React.FC<props> = ({ roomId }) => {
                             setMessages((prev) => {
                                 return [...prev, willSendMessage]
                             });
-                        }
-                        }
+                        })}
                     />
                 </Flex>
             </FormControl>
             <VStack my={2}>
+                {
+                    (errors.message) && (
+                        <AlertMessage title="送信エラー" description="メッセージは100文字以下で入力してください" />
+                    )
+                }
+                {
+                    (errors.username) && (
+                        <AlertMessage title="送信エラー" description="ユーザー名は20文字以下で入力してください" />
+                    )
+
+                }
             </VStack>
             <Divider flexGrow={0} my={2} />
             <Flex direction={"column-reverse"} flexGrow={1} flex={1} maxH={"60vh"} overflowY="scroll">
