@@ -17,7 +17,7 @@ interface Message {
 }
 
 export const Chat: React.FC<props> = ({ roomId }) => {
-    const peer = useRef(new Peer({ key: APIKEY as string, debug: 3 }));
+    const peer = useRef(new Peer({ key: APIKEY as string }));
     const [room, setRoom] = useState<SfuRoom>();
     const [messages, setMessages] = useState<Array<Message>>([]);
 
