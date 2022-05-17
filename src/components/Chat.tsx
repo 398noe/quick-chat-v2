@@ -67,12 +67,6 @@ export const Chat: React.FC<props> = ({ roomId }) => {
         }
     }
 
-    const onEnd = () => {
-        if (room) {
-            room.close();
-        }
-    }
-
     const sendMessage = (messageData: Message) => {
         room?.send(messageData);
     }
