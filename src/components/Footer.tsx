@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Box, Button, chakra, Container, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
+import { Box, chakra, Container, Stack, Text, useColorModeValue, VisuallyHidden } from '@chakra-ui/react';
 import { FaGithub, FaTwitter } from "react-icons/fa";
 
 const SocialButton = ({ children, label, href } : {
