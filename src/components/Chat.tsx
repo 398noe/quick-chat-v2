@@ -1,12 +1,11 @@
-import { Flex, FormControl, Input, IconButton, VStack, Divider, Box } from "@chakra-ui/react";
-import { FaPaperPlane, FaPlusSquare } from "react-icons/fa";
+import { Flex, FormControl, Input, IconButton, VStack, Divider, Button, HStack } from "@chakra-ui/react";
+import { FaPaperPlane } from "react-icons/fa";
 import ChatMessage from "./ChatMessage";
 
 import Peer, { SfuRoom } from "skyway-js";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const APIKEY = process.env.REACT_APP_API_KEY;
-
 interface props {
     roomId: string;
 }
@@ -30,38 +29,65 @@ export const Chat: React.FC<props> = ({ roomId }) => {
     const handleUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserName(event.target.value);
     }
+    const isFirst = useRef(false);
+
+    useEffect(() => {
+        if(isFirst.current === false) {
+            onStart();
+            isFirst.current = true;
+        }
+    }, []);
 
     const onStart = () => {
         if (peer.current) {
+            peer.current.once("open", () => {
+                console.log("Peer is open!!");
+                console.log("peer is ready. joining room");
+
+                const initRoom = peer.current.joinRoom<SfuRoom>(roomId, {
+                    mode: "sfu"
+                });
+
+                initRoom.once("open", () => {
+                    console.log("入室しました");
+                });
+
+                initRoom.on("peerJoin", (peerId) => {
+                    console.log(peerId, "さんが入室しました");
+                });
+
+                initRoom.on("data", ({ data, src }) => {
+                    console.log("データを受信しました");
+                    console.log("data: ", data, "\nsrc:", src);
+                    // データをチャットの配列に追加
+                    setMessages((prev) => {
+                        return [...prev, data]
+                    });
+                });
+                initRoom.on("peerLeave", (peerId) => {
+                    console.log(peerId, "さんが退出しました");
+                });
+
+                initRoom.on("close", () => {
+                    onEnd();
+                });
+
+                initRoom.on("error", () => {
+                    console.error();
+                    onEnd();
+                });
+                setRoom(initRoom);
+            });
+
             if (!peer.current.open) {
+                console.log("peer is not ready.");
                 return;
             }
-            const initRoom = peer.current.joinRoom<SfuRoom>(roomId, {
-                mode: "sfu"
-            });
-
-            initRoom.once("open", () => {
-                console.log("入室しました");
-            });
-
-            initRoom.on("peerJoin", (peerId) => {
-                console.log(peerId, "さんが入室しました");
-            });
-
-            initRoom.on("data", ({ data, src }) => {
-                console.log("データを受信しました");
-                console.log("data: ", data, "\nsrc:", src);
-                // データをチャットの配列に追加
-                setMessages((prev) => {
-                    return [...prev, data]
-                });
-            });
-            initRoom.on("peerLeave", (peerId) => {
-                console.log(peerId, "さんが退出しました");
-            });
-
-            setRoom(initRoom);
         }
+    }
+
+    const onEnd = () => {
+        room?.close();
     }
 
     const sendMessage = (messageData: Message) => {
@@ -118,11 +144,6 @@ export const Chat: React.FC<props> = ({ roomId }) => {
             <Flex direction={"column-reverse"} flexGrow={1} flex={1} maxH={"60vh"} overflowY="scroll">
                 {showMessage()}
             </Flex>
-            <Box>
-                <IconButton variant="solid" aria-label={"Start connection"} icon={<FaPlusSquare />}
-                    onClick={onStart}
-                />
-            </Box>
         </Flex>
     );
 }
